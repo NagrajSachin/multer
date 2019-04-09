@@ -1,0 +1,38 @@
+@font-face {
+    font-family: "icons";
+    src: url("./icons.eot?4c7b7ead9e650664db3499c6df4a347f?#iefix") format("embedded-opentype"),
+url("./icons.woff2?4c7b7ead9e650664db3499c6df4a347f") format("woff2"),
+url("./icons.woff?4c7b7ead9e650664db3499c6df4a347f") format("woff"),
+url("./icons.ttf?4c7b7ead9e650664db3499c6df4a347f") format("truetype"),
+url("./icons.svg?4c7b7ead9e650664db3499c6df4a347f#icons") format("svg");
+}
+
+i[class^="icon-"]:before, i[class*=" icon-"]:before {
+    font-family: icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-blue-user-icon:before {
+    content: "\f101";
+}
+.icon-camera:before {
+    content: "\f102";
+}
+.icon-chola-logo-01:before {
+    content: "\f103";
+}
+.icon-ips-bg-01:before {
+    content: "\f104";
+}
+.icon-ips1:before {
+    content: "\f105";
+}
+.icon-ips2:before {
+    content: "\f106";
+}
