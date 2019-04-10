@@ -5,7 +5,7 @@ const IconFont = new Schema({
     location : {
         type : String,
     },
-    iconname : {
+    filename : {
         type : String,
     },
     classname : {

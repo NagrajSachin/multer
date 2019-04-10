@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const cmd = require('node-cmd');
-const fs = require('fs');
 const IcontFont = require('../models/icon-font');
+const fs = require('fs');
+const fsExtra = require('fs-extra')
+const path = require('path');
+const rimraf = require('rimraf');
 const copydir = require('copy-dir');
 const multer = require('multer');
 const bodyparser = require('body-parser');
@@ -25,38 +28,48 @@ router.route('/upload')
         res.statusCode = 200;
         res.setHeader('content-type', 'application/json');
         res.json(req.files);
-        // console.log(req.files);
+        console.log(req.files);
 
-        cmd.get('icon-font-generator uploads/*.svg -o out -s', (err, data) => {
+        cmd.get('icon-font-generator uploads/*.svg -o out', (err, data) => {
             console.log("The current working directory : " + data);
-        });
 
-        copydir('uploads/', 'archive/', function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log('ok');
-            }
-        });
+            copydir('uploads/', 'archive/', (err) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log('ok');
+                }
 
-        fs.readFile('out/icons.json','utf-8',(err,data)=>{
-            if(err){
-                console.log(err);
-            }else{
-                let arr = [];
-                let Obj = JSON.parse(data);
-                console.log(Obj);
-                Object.keys(Obj).forEach(ele =>{
-                    arr.push({
-                        location:`archive/${ele}.svg`,
-                        iconname:`icon-${ele}`,
-                        classname:`${ele}.svg`
-                    })
-                })
-                console.log(arr);
-                    IcontFont.insertMany(arr);
-            }
-        })
+                fs.readFile('out/icons.json', 'utf-8', (err, data) => {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        let arr = [];
+                        let Obj = JSON.parse(data);
+                        Object.keys(Obj).forEach(ele => {
+                            arr.push({
+                                location: `archive/${ele}.svg`,
+                                filename: `${ele}.svg`,
+                                classname: `icon-${ele}`
+                            })
+                        })
+                        var year = [];
+                        arr.forEach(Element=> {
+                            year.push({ updateOne : {
+                                "filter" : { "classname" : Element.classname },
+                                "update" : { $set : Element },
+                                "upsert": true
+                             } })     
+                        })
+                        console.log(JSON.stringify(year));
+                        IcontFont.bulkWrite(year);
+                    }
+                    rimraf('uploads/*', () => {
+                        console.log('done');
+                    });
+                });
+            });
+        });
     });
 
 module.exports = router;
